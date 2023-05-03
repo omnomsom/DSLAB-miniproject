@@ -1,5 +1,5 @@
-
 from tkinter import *
+from tkinter import ttk
 import requests
 import json
 import os
@@ -84,59 +84,86 @@ def threads(e, output):
     SERVER.close()
 
 
+fields = ('URL', 'Clients', 'Video Time')
+
 def makeform(root, fields):
     entries = {}
     for field in fields:
         row = Frame(root)
-        lab = Label(row, width=22, text=field+": ", anchor='w')
-        ent = Entry(row)
-        row.pack(side=TOP, fill=X, padx=5, pady=5)
+        lab = Label(row, width=20, text=field+": ", anchor='w', font=("Helvetica", 12))
+        if field == 'URL':
+            url_options = {
+        "Lion Sample": "http://mirrors.standaloneinstaller.com/video-sample/lion-sample.mp4",
+        "Jellyfish": "http://mirrors.standaloneinstaller.com/video-sample/jellyfish-25-mbps-hd-hevc.mp4",
+        "Big Buck Bunny": "http://mirrors.standaloneinstaller.com/video-sample/BigBuckBunny_320x180.mp4",
+        "Lake": "http://mirrors.standaloneinstaller.com/video-sample/lake.mp4"
+            }
+            ent = ttk.Combobox(row, font=("Helvetica", 12),values=list(url_options.values()))
+            ent.current(0)
+        else:
+            ent = Entry(row, font=("Helvetica", 12))
+        row.pack(side=TOP, fill=X, padx=10, pady=10)
         lab.pack(side=LEFT)
         ent.pack(side=RIGHT, expand=YES, fill=X)
         entries[field] = ent
-    entries['URL'].insert(0, "http://mirrors.standaloneinstaller.com/video-sample/lion-sample.mp4")
     entries['Clients'].insert(0, "1")
     return entries
-
-
 def GUI():
     win = Tk()
 
-    topFrame = Frame(win)
-    topFrame.pack()
-    midFrame = Frame(win)
-    midFrame.pack()
-    bottFrame = Frame(win)
-    bottFrame.pack()
-
     win.title("Moderator and Segmentation Unit")
-    win.geometry("550x550+30+30")
+    win.geometry("700x600")
+    win.configure(bg='#F2F2F2')
+    # win.Photo("router.png")
 
+    # Creating Menubar
     menu = Menu(win)
     win.config(menu=menu)
-    filemenu = Menu(menu)
+    filemenu = Menu(menu, tearoff=0)
     menu.add_cascade(label='File', menu=filemenu)
     filemenu.add_command(label='New')
     filemenu.add_command(label='Open...')
     filemenu.add_separator()
     filemenu.add_command(label='Exit', command=win.quit)
-    helpmenu = Menu(menu)
+    helpmenu = Menu(menu, tearoff=0)
     menu.add_cascade(label='Help', menu=helpmenu)
     helpmenu.add_command(label='About')
 
-    ents = makeform(topFrame, fields)
+    # Top Frame
+    topFrame = Frame(win, bg='#F2F2F2')
+    topFrame.pack(fill=X)
+
+    headingLabel = Label(topFrame, text="Moderator and Segmentation Unit", font=("Helvetica", 18), bg='#F2F2F2')
+    headingLabel.pack(side=TOP, padx=20, pady=20)
+
+    formFrame = Frame(topFrame, bg='#F2F2F2')
+    formFrame.pack(padx=20, pady=20)
+
+    ents = makeform(formFrame, fields)
+
+    # Mid Frame
+    midFrame = Frame(win, bg='#F2F2F2')
+    midFrame.pack(fill=X)
+
+    b1 = Button(midFrame, text='Go', command=(lambda e=ents: threads(e, output)), bg='#008CBA', fg='white', font=("Helvetica", 12))
+    b1.pack(side=LEFT, padx=20, pady=20)
+
+    b3 = Button(midFrame, text='Quit', command=win.quit, bg='#E4002B', fg='white', font=("Helvetica", 12))
+    b3.pack(side=LEFT, padx=20, pady=20)
+
+    win.bind('<Return>', (lambda event, e=ents: threads(e, output)))
+
+    # Bottom Frame
+    bottFrame = Frame(win, bg='#F2F2F2')
+    bottFrame.pack(fill=X)
 
     scrollbar = Scrollbar(bottFrame)
-    output = Listbox(bottFrame, height=15, width=50, yscrollcommand=scrollbar.set)
-    output.pack(side=LEFT, fill=BOTH)
+    output = Listbox(bottFrame, height=15, width=80, yscrollcommand=scrollbar.set, font=("Helvetica", 12))
+    output.pack(side=LEFT, fill=BOTH, padx=20, pady=20)
     scrollbar.pack(side=RIGHT, fill=Y)
-
-    b1 = Button(midFrame, text='Go', command=(lambda e=ents: threads(e, output)))
-    b1.pack(side=LEFT, padx=5, pady=5)
-    b3 = Button(midFrame, text='Quit', command=win.quit)
-    b3.pack(side=LEFT, padx=5, pady=5)
-    win.bind('<Return>', (lambda event, e=ents: threads(e, output)))
     win.mainloop()
+
+
 
 
 if __name__ == "__main__":

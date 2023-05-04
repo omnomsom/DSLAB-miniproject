@@ -128,9 +128,9 @@ def makeform(root, fields):
 def GUI():
     win = Tk()
 
-    win.title("Welcome to P2P Downloader")
-    win.geometry("700x600")
-    win.configure(bg='#F2F2F2')
+    win.title("P2P Downloader")
+    win.geometry("800x600")
+    win.configure(bg='#D8F1F4')
     # win.Photo("router.png")
 
     # Creating Menubar
@@ -149,33 +149,30 @@ def GUI():
     # Top Frame
     topFrame = Frame(win, bg='#F2F2F2')
     topFrame.pack(fill=X)
-
-    headingLabel = Label(topFrame, text="Moderator and Segmentation Unit", font=("Helvetica", 18), bg='#F2F2F2')
-    headingLabel.pack(side=TOP, padx=20, pady=20)
-
+    headingLabel = Label(topFrame, text="Welcome to P2P Downloader", font=(
+    	"Arial", 24, "bold"), bg='#AEE2E8', fg='#333333')
+    headingLabel.pack(side=TOP, padx=20, pady=40)
     formFrame = Frame(topFrame, bg='#F2F2F2')
     formFrame.pack(padx=20, pady=20)
 
     ents = makeform(formFrame, fields)
 
     # Mid Frame
-    midFrame = Frame(win, bg='#F2F2F2')
+    midFrame = Frame(win, bg='#D8F1F4')
     midFrame.pack(fill=X)
 
-    b1 = Button(midFrame, text='Go', command=(lambda e=ents: threads(e, output)), bg='#008CBA', fg='white', font=("Helvetica", 12))
-    b1.pack(side=LEFT, padx=20, pady=20)
 
-    b3 = Button(midFrame, text='Quit', command=win.quit, bg='#E4002B', fg='white', font=("Helvetica", 12))
-    b3.pack(side=LEFT, padx=20, pady=20)
-
+    b1 = Button(midFrame, text='Go', command=(lambda e=ents: threads(e, output)), bg='#008CBA', fg='white', font=("Arial", 16, "bold"))
+    b1.pack(side=TOP, padx=20, pady=20, anchor=CENTER)
+    b3 = Button(midFrame, text='Quit', command=win.quit,bg='#E4002B', fg='white', font=("Arial", 16, "bold"))
+    b3.pack(side=BOTTOM, padx=20, pady=20, anchor=CENTER)
     win.bind('<Return>', (lambda event, e=ents: threads(e, output)))
-
     # Bottom Frame
-    bottFrame = Frame(win, bg='#F2F2F2')
+    bottFrame = Frame(win, bg='#D8F1F4')
     bottFrame.pack(fill=X)
 
     scrollbar = Scrollbar(bottFrame)
-    output = Listbox(bottFrame, height=15, width=80, yscrollcommand=scrollbar.set, font=("Helvetica", 12))
+    output = Listbox(bottFrame, height=15, width=80,yscrollcommand=scrollbar.set, font=("Arial", 14))
     output.pack(side=LEFT, fill=BOTH, padx=20, pady=20)
     scrollbar.pack(side=RIGHT, fill=Y)
     win.mainloop()

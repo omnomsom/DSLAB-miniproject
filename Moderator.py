@@ -8,7 +8,7 @@ from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 import hashlib
 
-fields = ('URL', 'Clients')
+fields = ('File','Custom URL', 'Clients')
 
 
 def integrity_check(file,hash):
@@ -49,13 +49,23 @@ def accept_incoming_connections(start, end, url_of_file, file_name, output):
 def threads(e, output):
     file_name = str(e['File'].get())
     number_of_client = int(e['Clients'].get())
-    file_name = url_of_file.split('/')[-1]
+    custom_url = str(e['Custom URL'].get())
+    if custom_url:
+        url_of_file = custom_url
+        file_name = url_of_file.split("/")[-1]
+    else:
+        url_of_file = "http://mirrors.standaloneinstaller.com/video-sample/" + file_name
+
+    print("url:" + url_of_file)
+    print("file name" + file_name)
     i = 1
     while os.path.isfile(file_name):
         file_name = str(i)+file_name
         i += 1
+    print("new name: " + file_name)
 
     r = requests.head(url_of_file)
+
     file_size = int(r.headers['content-length'])
     output.insert(END, number_of_client)
     try:
@@ -84,30 +94,37 @@ def threads(e, output):
     SERVER.close()
 
 
-fields = ('URL', 'Clients', 'Video Time')
+fields = ('File','Custom URL', 'Clients')
 
 def makeform(root, fields):
     entries = {}
     for field in fields:
         row = Frame(root)
-        lab = Label(row, width=20, text=field+": ", anchor='w', font=("Helvetica", 12))
-        if field == 'URL':
+        lab = Label(row, width=20, text=field + ": ", anchor='w', font=("Helvetica", 12))
+        if field == 'File':
             url_options = {
-        "Lion Sample": "http://mirrors.standaloneinstaller.com/video-sample/lion-sample.mp4",
-        "Jellyfish": "http://mirrors.standaloneinstaller.com/video-sample/jellyfish-25-mbps-hd-hevc.mp4",
-        "Big Buck Bunny": "http://mirrors.standaloneinstaller.com/video-sample/BigBuckBunny_320x180.mp4",
-        "Lake": "http://mirrors.standaloneinstaller.com/video-sample/lake.mp4"
+                "Lion Sample": "lion-sample.mp4",
+                "Jellyfish": "jellyfish-25-mbps-hd-hevc.mp4",
+                "Big Buck Bunny": "BigBuckBunny_320x180.mp4",
+                "Lake": "lake.mp4",
+                "Small": "small.mp4",
+                "Star Trails": "star_trails.mp4"
             }
-            ent = ttk.Combobox(row, font=("Helvetica", 12),values=list(url_options.values()))
+            ent = ttk.Combobox(row, font=("Helvetica", 12), values=list(url_options.values()))
             ent.current(0)
+        elif field == 'Custom URL':
+            ent = Entry(row, font=("Helvetica", 12))
         else:
             ent = Entry(row, font=("Helvetica", 12))
-        row.pack(side=TOP, fill=X, padx=10, pady=10)
+        row.pack(side=TOP, fill=X, padx=5, pady=10)
         lab.pack(side=LEFT)
         ent.pack(side=RIGHT, expand=YES, fill=X)
         entries[field] = ent
     entries['Clients'].insert(0, "1")
     return entries
+
+
+
 def GUI():
     win = Tk()
 

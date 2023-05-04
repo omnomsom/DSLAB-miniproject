@@ -128,7 +128,7 @@ def makeform(root, fields):
 def GUI():
     win = Tk()
 
-    win.title("Moderator and Segmentation Unit")
+    win.title("Welcome to P2P Downloader")
     win.geometry("700x600")
     win.configure(bg='#F2F2F2')
     # win.Photo("router.png")

@@ -47,7 +47,7 @@ def accept_incoming_connections(start, end, url_of_file, file_name, output):
 
 
 def threads(e, output):
-    url_of_file = str(e['URL'].get())
+    file_name = str(e['File'].get())
     number_of_client = int(e['Clients'].get())
     file_name = url_of_file.split('/')[-1]
     i = 1

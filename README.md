@@ -11,4 +11,4 @@ Select the number of peers that you want to run, and execute the same.
 
     python.py Peer.py
 
-The selected file will get downloaded in a distributed fashion and get recombiled by the moderator!
+The selected file will get downloaded in a distributed fashion and get recompiled by the moderator!
